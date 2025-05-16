@@ -14,11 +14,13 @@ const VehicleCard = ({ car, index }) => {
     images = [],
   } = car;
 
-  const parsedOdometer = parseInt(odometer || '0').toLocaleString();
+const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
 const parsedPrice = parseFloat(price?.replace(/[^0-9.]/g, '') || '0').toLocaleString('en-CA', {
-    style: 'currency',
-    currency: 'CAD',
-  });
+  style: 'currency',
+  currency: 'CAD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
 
   return (
     <div className="glass-card text-white mb-4 shadow">

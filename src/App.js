@@ -9,6 +9,7 @@ import Warranty from './pages/WarrantyPage';
 
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+import BookTestDrive from './pages/BookTestDrive';
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
   <Route path="/inventory/:id" element={<CarDetail />} />
   <Route path="/financing" element={<Financing />} />
     <Route path="/warranty" element={<Warranty />} />
+    <Route path="/book-test-drive" element={<BookTestDrive />} />
+
 
   <Route path="/about" element={<AboutUs />} />
   <Route path="/contact" element={<ContactUs />} />

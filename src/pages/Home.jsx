@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 
 const heroStyle = {
   background: "url('/background.jpg') no-repeat center center fixed",
@@ -44,7 +45,7 @@ const Home = () => {
             <div className="col-md-6">
               <div style={cardStyle} className="text-center h-100">
                 <h3 className="text-warning mb-3">Apply for Financing</h3>
-                <p>Fast approval with trusted lenders. Submit your application online or in-office.</p>
+                <p>Fast approval with trusted lenders. Submit your application online.</p>
                 <a href="/financing" className="btn btn-outline-light">Start Application</a>
               </div>
             </div>
@@ -52,7 +53,7 @@ const Home = () => {
               <div style={cardStyle} className="text-center h-100">
                 <h3 className="text-warning mb-3">Book a Test Drive</h3>
                 <p>Experience your next car in person. Choose a time that works for you.</p>
-                <a href="/contact" className="btn btn-outline-light">Book Now</a>
+<Link to="/book-test-drive" className="btn btn-outline-light">Book Now</Link>
               </div>
             </div>
           </div>

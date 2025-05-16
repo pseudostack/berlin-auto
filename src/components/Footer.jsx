@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -18,10 +19,13 @@ const Footer = () => {
           <div className="col-md-4 mb-4">
             <h5 className="text-warning">Business Hours</h5>
             <p>
-              <strong>Mon–Fri:</strong> 8 AM – 9 PM<br />
-              <strong>Sat & Sun:</strong> By appointment only
-            </p>
-            <p>Call or <a href="/contact" className="text-warning">book online</a> to schedule your visit.</p>
+            <strong>Mon–Fri:</strong> 9 AM – 6 PM<br />
+            <strong>Sat:</strong> 9 AM – 2 PM<br />
+            <em className="text-warning">All visits by appointment only.<br />Appointments required after 5 PM and on Saturdays.</em>
+          </p>
+
+            <p>Call or <Link to="/book-test-drive">Book Now</Link>to schedule your visit.</p>
+
           </div>
 
           <div className="col-md-4 mb-4">
