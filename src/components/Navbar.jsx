@@ -6,7 +6,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src="/logo.svg" alt="Berlin Logo" style={{ height: '80px', width: 'auto' }} />
+          <img src="/logo.svg?v=2" alt="Berlin Logo" style={{ height: '80px', width: 'auto' }} />
         </Link>
         <button
           className="navbar-toggler"
