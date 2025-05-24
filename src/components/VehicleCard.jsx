@@ -24,13 +24,12 @@ const VehicleCard = ({ car, index }) => {
 
   return (
     <div className="glass-card text-white mb-4 shadow h-100 d-flex flex-column">
-      <Link to={`/inventory/${index + 1}`} className="text-decoration-none text-white d-flex flex-column flex-grow-1">
+<Link to={`/inventory/${car.id}`} className="text-decoration-none text-white d-flex flex-column flex-grow-1">
         <div className="position-relative">
      <img
   src={images.length > 0 ? images[0] : '/coming-soon.png'}
-  onError={(e) => e.target.src = '/coming-soon.png'}
-  className="card-img-top vehicle-img"
-  alt={description}
+  className="card-img-top vehicle-img coming-soon"
+  alt="Coming Soon"
 />
 
 
@@ -62,6 +61,7 @@ const VehicleCard = ({ car, index }) => {
           Book Test Drive
         </Link>
       </div>
+      
     </div>
   );
 };
