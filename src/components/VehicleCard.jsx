@@ -14,35 +14,53 @@ const VehicleCard = ({ car, index }) => {
     images = [],
   } = car;
 
-const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
-const parsedPrice = parseFloat(price?.replace(/[^0-9.]/g, '') || '0').toLocaleString('en-CA', {
-  style: 'currency',
-  currency: 'CAD',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
+  const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
+  const parsedPrice = parseFloat(price?.replace(/[^0-9.]/g, '') || '0').toLocaleString('en-CA', {
+    style: 'currency',
+    currency: 'CAD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   return (
-    <div className="glass-card text-white mb-4 shadow">
-      <Link to={`/inventory/${index + 1}`} className="text-decoration-none text-white">
-        {images.length > 0 && (
-          <img
-            src={images[0]}
-            className="card-img-top"
-            alt={description}
-            style={{ height: '180px', objectFit: 'cover', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}
-          />
-        )}
-        <div className="p-3">
-          <h5 className="fw-bold">{description} {trim && `- ${trim}`}</h5>
+    <div className="glass-card text-white mb-4 shadow h-100 d-flex flex-column">
+      <Link to={`/inventory/${index + 1}`} className="text-decoration-none text-white d-flex flex-column flex-grow-1">
+        <div className="position-relative">
+     <img
+  src={images.length > 0 ? images[0] : '/coming-soon.png'}
+  onError={(e) => e.target.src = '/coming-soon.png'}
+  className="card-img-top vehicle-img"
+  alt={description}
+/>
+
+
+          {/* Overlay title on image */}
+          <div className="image-overlay-title px-2 py-1">
+            <div className="model-text">{description}</div>
+            {trim && <div className="trim-text">{trim}</div>}
+          </div>
+        </div>
+
+        {/* Specs with background */}
+        <div className="vehicle-specs-bg p-3 d-flex flex-column flex-grow-1">
+          <p className="text-uppercase text-warning fw-bold mb-2" style={{ fontSize: '0.9rem' }}>
+            Vehicle Specs:
+          </p>
           <p className="mb-1"><strong>Drive:</strong> {drive || 'N/A'}</p>
           <p className="mb-1"><strong>Transmission:</strong> {transmission || 'N/A'}</p>
+          <p className="mb-1"><strong>Colour:</strong> {colour || 'N/A'}</p>
           <p className="mb-1"><strong>Odometer:</strong> {parsedOdometer} km</p>
           <p className="mb-0"><strong>Price:</strong> <span className="text-success">{parsedPrice}</span></p>
         </div>
       </Link>
+
       <div className="px-3 pb-3">
-        <Link to="/contact" className="btn btn-sm btn-warning w-100 mt-2">Book Test Drive</Link>
+        <Link
+          to={`/book-test-drive?vehicle=${encodeURIComponent(`${car.description}${car.trim ? ` - ${car.trim}` : ''}`)}`}
+          className="btn btn-sm btn-warning w-100"
+        >
+          Book Test Drive
+        </Link>
       </div>
     </div>
   );

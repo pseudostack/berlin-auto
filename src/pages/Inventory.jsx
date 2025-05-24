@@ -6,9 +6,21 @@ import Footer from '../components/Footer';
 
 const Inventory = () => {
   const [cars, setCars] = useState([]);
+  const [availableFilters, setAvailableFilters] = useState({
+    years: [],
+    makes: [],
+    models: [],
+    transmissions: [],
+    cylinders: [],
+    colors: []
+  });
   const [filters, setFilters] = useState({
     year: '',
     make: '',
+    model: '',
+    transmission: '',
+    cylinders: '',
+    colour: '',
     price: '',
     mileage: '',
     showMore: false
@@ -23,13 +35,39 @@ const Inventory = () => {
           skipEmptyLines: true,
           complete: ({ data }) => {
             const cleaned = data.filter(car => car.description && car['List price']);
-            const parsed = cleaned.map((car, index) => ({
-              ...car,
-              id: index + 1,
-              price: parseFloat(car['List price']?.replace(/[^0-9.]/g, '')) || 0,
-              images: car.images?.split(',').map(i => i.trim()) || [],
-            }));
+   const parsed = cleaned
+  .map((car, index) => {
+    const [year, make, ...modelParts] = car.description.split(' ');
+    return {
+      ...car,
+      id: index + 1,
+      year,
+      make,
+      model: modelParts.join(' '),
+      price: parseFloat(car['List price']?.replace(/[^0-9.]/g, '')) || 0,
+      mileage: parseFloat(car.odometer?.replace(/[^0-9]/g, '')) || 0,
+      images: car.images
+        ? car.images.split(',').map(i => i.trim()).filter(i => i !== '')
+        : []
+    };
+  })
+  .sort((a, b) => {
+    if (a.status === 'In Stock' && b.status !== 'In Stock') return -1;
+    if (a.status !== 'In Stock' && b.status === 'In Stock') return 1;
+    return 0;
+  });
+
             setCars(parsed);
+
+            const getUnique = key => [...new Set(parsed.map(car => car[key]).filter(Boolean))];
+            setAvailableFilters({
+              years: getUnique('year'),
+              makes: getUnique('make'),
+              models: getUnique('model'),
+              transmissions: getUnique('transmission'),
+              cylinders: getUnique('cylinders'),
+              colors: getUnique('colour')
+            });
           }
         });
       });
@@ -40,20 +78,33 @@ const Inventory = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({ year: '', make: '', price: '', mileage: '', showMore: false });
+    setFilters({
+      year: '',
+      make: '',
+      model: '',
+      transmission: '',
+      cylinders: '',
+      colour: '',
+      price: '',
+      mileage: '',
+      showMore: false
+    });
   };
 
   const toggleMoreFilters = () => {
     setFilters(prev => ({ ...prev, showMore: !prev.showMore }));
   };
 
-  const filteredCars = cars.filter(car => {
-    const yearMatch = filters.year ? car.description.includes(filters.year) : true;
-    const makeMatch = filters.make ? car.description.toLowerCase().includes(filters.make.toLowerCase()) : true;
-    const priceMatch = filters.price ? car.price <= parseFloat(filters.price) : true;
-    const mileageMatch = filters.mileage ? parseFloat(car.odometer?.replace(/[^0-9]/g, '') || 0) <= parseFloat(filters.mileage) : true;
-    return yearMatch && makeMatch && priceMatch && mileageMatch;
-  });
+  const filteredCars = cars.filter(car =>
+    (!filters.year || car.year === filters.year) &&
+    (!filters.make || car.make === filters.make) &&
+    (!filters.model || car.model === filters.model) &&
+    (!filters.transmission || car.transmission === filters.transmission) &&
+    (!filters.cylinders || car.cylinders === filters.cylinders) &&
+    (!filters.colour || car.colour === filters.colour) &&
+    (!filters.price || car.price <= parseFloat(filters.price)) &&
+    (!filters.mileage || car.mileage <= parseFloat(filters.mileage))
+  );
 
   return (
     <>
@@ -62,45 +113,89 @@ const Inventory = () => {
         <div className="container py-5 text-white">
           <h1 className="text-warning mb-4">Available Vehicles</h1>
 
-          {/* Filters Inline */}
+          {/* Filters */}
           <div className="bg-dark p-3 rounded mb-4">
             <div className="row g-3">
-              <div className="col-md-3">
+              <div className="col-md-4">
                 <label className="form-label">Year</label>
                 <select name="year" className="form-select" value={filters.year} onChange={handleFilterChange}>
                   <option value="">Any</option>
-                  <option value="2024">2024</option>
-                  <option value="2023">2023</option>
-                  <option value="2022">2022</option>
+                  {availableFilters.years.map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
                 </select>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4">
                 <label className="form-label">Make</label>
                 <select name="make" className="form-select" value={filters.make} onChange={handleFilterChange}>
                   <option value="">Any</option>
-                  <option value="BMW">BMW</option>
-                  <option value="Audi">Audi</option>
-                  <option value="Mercedes">Mercedes</option>
-                  <option value="Porsche">Porsche</option>
+                  {availableFilters.makes.map(make => (
+                    <option key={make} value={make}>{make}</option>
+                  ))}
                 </select>
               </div>
-              <div className="col-md-3">
-                <label className="form-label">Max Price</label>
-                <input name="price" type="number" className="form-control" value={filters.price} onChange={handleFilterChange} placeholder="$40,000" />
-              </div>
-              <div className="col-md-3">
-                <label className="form-label">Max Mileage</label>
-                <input name="mileage" type="number" className="form-control" value={filters.mileage} onChange={handleFilterChange} placeholder="100,000" />
+              <div className="col-md-4">
+                <label className="form-label">Model</label>
+                <select name="model" className="form-select" value={filters.model} onChange={handleFilterChange}>
+                  <option value="">Any</option>
+                  {availableFilters.models
+                    .filter(model => {
+                      const matchCar = cars.find(car =>
+                        (!filters.make || car.make === filters.make) &&
+                        (!filters.year || car.year === filters.year) &&
+                        car.model === model
+                      );
+                      return !!matchCar;
+                    })
+                    .map(model => (
+                      <option key={model} value={model}>{model}</option>
+                    ))}
+                </select>
               </div>
             </div>
 
-            {/* Expandable Filters */}
+            {/* More Filters */}
             {filters.showMore && (
               <div className="row g-3 mt-3">
-                {/* Additional filters coming soon */}
+                <div className="col-md-4">
+                  <label className="form-label">Transmission</label>
+                  <select name="transmission" className="form-select" value={filters.transmission} onChange={handleFilterChange}>
+                    <option value="">Any</option>
+                    {availableFilters.transmissions.map(trans => (
+                      <option key={trans} value={trans}>{trans}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Cylinders</label>
+                  <select name="cylinders" className="form-select" value={filters.cylinders} onChange={handleFilterChange}>
+                    <option value="">Any</option>
+                    {availableFilters.cylinders.map(cyl => (
+                      <option key={cyl} value={cyl}>{cyl}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Colour</label>
+                  <select name="colour" className="form-select" value={filters.colour} onChange={handleFilterChange}>
+                    <option value="">Any</option>
+                    {availableFilters.colors.map(color => (
+                      <option key={color} value={color}>{color}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Max Price</label>
+                  <input name="price" type="number" className="form-control" value={filters.price} onChange={handleFilterChange} placeholder="e.g. 25000" />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Max Mileage</label>
+                  <input name="mileage" type="number" className="form-control" value={filters.mileage} onChange={handleFilterChange} placeholder="e.g. 100000" />
+                </div>
               </div>
             )}
 
+            {/* Actions */}
             <div className="mt-3 d-flex justify-content-between">
               <button className="btn btn-sm btn-outline-light" onClick={handleClearFilters}>Clear Filters</button>
               <button className="btn btn-sm btn-warning" onClick={toggleMoreFilters}>

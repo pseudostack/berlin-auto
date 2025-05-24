@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import Papa from 'papaparse';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-const BookTestDrive = () => {
-  const [cars, setCars] = useState([]);
-  const [form, setForm] = useState({
-    vehicle: '',
-    date: '',
-    time: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    callTime: '',
-    notes: ''
-  });
 
-  // Limit date options to next 3 days
+
+const BookTestDrive = () => {
+  
+  const location = useLocation();
+const params = new URLSearchParams(location.search);
+const preselectedVehicle = params.get('vehicle') || '';
+  const [cars, setCars] = useState([]);
+const [form, setForm] = useState({
+  vehicle: preselectedVehicle,
+  date: '',
+  time: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  callTime: '',
+  notes: ''
+});
+
+
   const getDateOptions = () => {
     const options = [];
     for (let i = 0; i < 3; i++) {
@@ -27,6 +35,7 @@ const BookTestDrive = () => {
     }
     return options;
   };
+
 
   useEffect(() => {
     fetch('/inventory.csv')
@@ -43,7 +52,7 @@ const BookTestDrive = () => {
               name: `${car.description} ${car.trim ? `- ${car.trim}` : ''}`.trim(),
             }));
             setCars(parsed);
-            setForm(f => ({ ...f, vehicle: parsed[0]?.name || '' }));
+setForm(f => ({ ...f, vehicle: preselectedVehicle || parsed[0]?.name || '' }));
           }
         });
       });
@@ -73,7 +82,12 @@ Notes: ${form.notes || 'N/A'}`
   };
 
   const dateOptions = getDateOptions();
-  const timeOptions = Array.from({ length: 10 }, (_, i) => `${9 + i}:00`);
+const timeOptions = Array.from({ length: 10 }, (_, i) => {
+  const hour = 9 + i;
+  const suffix = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${displayHour}:00 ${suffix}`;
+});
 
   return (
     <>
@@ -99,15 +113,20 @@ Notes: ${form.notes || 'N/A'}`
                 </select>
               </div>
 
-              <div className="col-md-3">
-                <label className="form-label">Preferred Date</label>
-                <select name="date" value={form.date} onChange={handleChange} className="form-select" required>
-                  <option value="">Select</option>
-                  {dateOptions.map(date => (
-                    <option key={date} value={date}>{date}</option>
-                  ))}
-                </select>
-              </div>
+<div className="col-md-3">
+  <label className="form-label">Preferred Date</label>
+  <input
+    type="date"
+    name="date"
+    value={form.date}
+    onChange={handleChange}
+    className="form-control"
+    min={getDateOptions()[0]}
+    max={getDateOptions()[2]}
+    required
+  />
+</div>
+
 
               <div className="col-md-3">
                 <label className="form-label">Preferred Time</label>
