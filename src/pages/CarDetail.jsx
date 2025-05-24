@@ -19,13 +19,25 @@ const CarDetail = () => {
           header: true,
           skipEmptyLines: true,
           complete: ({ data }) => {
-            const selected = data[parseInt(id) - 1];
-            if (selected) {
-              setCar({
-                ...selected,
-                images: selected.images?.split(',').map(url => url.trim()) || [],
-              });
-            }
+const parsed = data.map((car, index) => ({
+  ...car,
+  id: car['stock #'] || String(index + 1),
+  images: car.images?.split(',').map(url => url.trim()).filter(Boolean) || [],
+}));
+
+const selected = parsed.find(car => String(car.id) === id);
+
+if (selected) {
+  setCar({
+    ...selected,
+    images: typeof selected.images === 'string'
+      ? selected.images.split(',').map(url => url.trim()).filter(Boolean)
+      : Array.isArray(selected.images)
+        ? selected.images
+        : [],
+  });
+}
+
           }
         });
       });

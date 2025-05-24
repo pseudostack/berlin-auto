@@ -6,6 +6,7 @@ import Financing from './pages/Financing';
 import Inventory from './pages/Inventory';
 import CarDetail from './pages/CarDetail';
 import Warranty from './pages/WarrantyPage';
+import AdminPanel from './pages/AdminPanel'; // adjust path as needed
 
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
@@ -22,6 +23,7 @@ const App = () => {
   <Route path="/financing" element={<Financing />} />
     <Route path="/warranty" element={<Warranty />} />
     <Route path="/book-test-drive" element={<BookTestDrive />} />
+        <Route path="/admin" element={<AdminPanel />} />
 
 
   <Route path="/about" element={<AboutUs />} />
