@@ -24,7 +24,7 @@ const Footer = () => {
             <em className="text-warning">All visits by appointment only.<br />Appointments required after 5 PM and on Saturdays.</em>
           </p>
 
-            <p>Call or <Link to="/book-test-drive">Book Now</Link>to schedule your visit.</p>
+            <p>Call or <Link to="/book-test-drive">Book Now</Link> to schedule your visit.</p>
 
           </div>
 

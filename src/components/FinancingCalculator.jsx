@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 const FinancingCalculator = ({ price }) => {
-  const [down, setDown] = useState(0);
-  const [tradeIn, setTradeIn] = useState(0);
+const [down, setDown] = useState('');
+const [tradeIn, setTradeIn] = useState('');
   const [term, setTerm] = useState(60);
   const [frequency, setFrequency] = useState('biweekly');
   const [creditScore, setCreditScore] = useState('');
@@ -50,12 +50,20 @@ const FinancingCalculator = ({ price }) => {
       <div className="row g-3">
         <div className="col-md-4">
           <label className="form-label">Down Payment (optional)</label>
-          <input type="number" className="form-control" value={down} onChange={e => setDown(+e.target.value)} />
-        </div>
+<input
+  type="number"
+  className="form-control"
+  value={down}
+  onChange={e => setDown(e.target.value)}
+/>        </div>
         <div className="col-md-4">
           <label className="form-label">Trade-In Value (optional)</label>
-          <input type="number" className="form-control" value={tradeIn} onChange={e => setTradeIn(+e.target.value)} />
-        </div>
+<input
+  type="number"
+  className="form-control"
+  value={tradeIn}
+  onChange={e => setTradeIn(e.target.value)}
+/>        </div>
         <div className="col-md-4">
           <label className="form-label">Credit Score</label>
           <select className="form-select" value={creditScore} onChange={e => setCreditScore(e.target.value)} required>

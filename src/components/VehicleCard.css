@@ -1,12 +1,69 @@
 .glass-card {
-  background: rgba(0, 0, 0, 0.4); /* more see-through */
-  border-radius: 0; /* square corners */
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 0;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .glass-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.vehicle-img {
+  height: 220px;
+  object-fit: cover;
+  object-position: center 80%; /* ← Was 30%, now higher */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+
+/* Title on image */
+.image-overlay-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  line-height: 1.2;
+  padding: 0.5rem 0.75rem;
+}
+
+.model-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.trim-text {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+/* Specs section background */
+.vehicle-specs-bg {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.image-overlay-placeholder {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  font-weight: 300;
+  font-size: 1rem; /* smaller text */
+  padding-top: 30px; /* pushes it down slightly */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
 }
