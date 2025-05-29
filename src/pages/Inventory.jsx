@@ -98,20 +98,17 @@ const Inventory = () => {
       (!filters.colour || car.colour === filters.colour) &&
       (!filters.price || car.price <= parseFloat(filters.price)) &&
       (!filters.mileage || car.mileage <= parseFloat(filters.mileage)) &&
-      !(car.status === 'in stock' && (!car.images || car.images.length === 0))
+      car.status !== 'in stock (no feed)'
     )
     .sort((a, b) => {
       const statusA = (a.status || '').trim().toLowerCase();
       const statusB = (b.status || '').trim().toLowerCase();
 
-      const hasImageA = a.images && a.images.length > 0;
-      const hasImageB = b.images && b.images.length > 0;
+      const isInStockA = statusA === 'in stock';
+      const isInStockB = statusB === 'in stock';
 
-      const effectiveStatusA = statusA === 'in stock' && !hasImageA ? 'coming soon' : statusA;
-      const effectiveStatusB = statusB === 'in stock' && !hasImageB ? 'coming soon' : statusB;
-
-      if (effectiveStatusA === 'in stock' && effectiveStatusB !== 'in stock') return -1;
-      if (effectiveStatusA !== 'in stock' && effectiveStatusB === 'in stock') return 1;
+      if (isInStockA && !isInStockB) return -1;
+      if (!isInStockA && isInStockB) return 1;
       return 0;
     });
 
