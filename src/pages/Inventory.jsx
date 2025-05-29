@@ -97,26 +97,23 @@ const Inventory = () => {
       (!filters.cylinders || car.cylinders === filters.cylinders) &&
       (!filters.colour || car.colour === filters.colour) &&
       (!filters.price || car.price <= parseFloat(filters.price)) &&
-      (!filters.mileage || car.mileage <= parseFloat(filters.mileage))
+      (!filters.mileage || car.mileage <= parseFloat(filters.mileage)) &&
+      !(car.status === 'in stock' && (!car.images || car.images.length === 0))
     )
-.sort((a, b) => {
-  const statusA = (a.status || '').trim().toLowerCase();
-  const statusB = (b.status || '').trim().toLowerCase();
+    .sort((a, b) => {
+      const statusA = (a.status || '').trim().toLowerCase();
+      const statusB = (b.status || '').trim().toLowerCase();
 
-  const hasImageA = a.images && a.images.length > 0;
-  const hasImageB = b.images && b.images.length > 0;
+      const hasImageA = a.images && a.images.length > 0;
+      const hasImageB = b.images && b.images.length > 0;
 
-  const effectiveStatusA = statusA === 'in stock' && !hasImageA ? 'coming soon' : statusA;
-  const effectiveStatusB = statusB === 'in stock' && !hasImageB ? 'coming soon' : statusB;
+      const effectiveStatusA = statusA === 'in stock' && !hasImageA ? 'coming soon' : statusA;
+      const effectiveStatusB = statusB === 'in stock' && !hasImageB ? 'coming soon' : statusB;
 
-  if (effectiveStatusA === 'in stock' && effectiveStatusB !== 'in stock') return -1;
-  if (effectiveStatusA !== 'in stock' && effectiveStatusB === 'in stock') return 1;
-  return 0;
-});
-console.log('Sorted filtered cars:', filteredCars.map(c => ({
-  status: c.status,
-  name: c.description
-})));
+      if (effectiveStatusA === 'in stock' && effectiveStatusB !== 'in stock') return -1;
+      if (effectiveStatusA !== 'in stock' && effectiveStatusB === 'in stock') return 1;
+      return 0;
+    });
 
   return (
     <>
