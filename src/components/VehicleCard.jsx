@@ -12,7 +12,7 @@ const VehicleCard = ({ car, index }) => {
     odometer,
     'List price': price,
     images = [],
-    links // 👈 Grab the Carfax link directly from car object
+    links // 👈 Carfax link from the backend CSV
   } = car;
 
   const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
@@ -61,7 +61,7 @@ const VehicleCard = ({ car, index }) => {
           Book Test Drive
         </Link>
 
-        {/* Carfax badge */}
+        {/* Carfax logo (only if Carfax PDF exists) */}
         {links && links.trim() !== '' && (
           <a
             href={links}
@@ -70,9 +70,9 @@ const VehicleCard = ({ car, index }) => {
             className="d-flex justify-content-center"
           >
             <img
-              src="/carfax-logo.svg" // Make sure this image exists in your public/static folder!
+              src="/carfaxcanada-logomark.svg"
               alt="View Carfax"
-              style={{ width: '100px', height: 'auto' }}
+              style={{ width: '50px', height: '50px' }}
             />
           </a>
         )}
