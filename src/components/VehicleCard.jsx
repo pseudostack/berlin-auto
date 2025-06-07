@@ -12,6 +12,7 @@ const VehicleCard = ({ car, index }) => {
     odometer,
     'List price': price,
     images = [],
+    links // 👈 Grab the Carfax link directly from car object
   } = car;
 
   const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
@@ -24,14 +25,13 @@ const VehicleCard = ({ car, index }) => {
 
   return (
     <div className="glass-card text-white mb-4 shadow h-100 d-flex flex-column">
-<Link to={`/inventory/${car.id}`} className="text-decoration-none text-white d-flex flex-column flex-grow-1">
+      <Link to={`/inventory/${car.id}`} className="text-decoration-none text-white d-flex flex-column flex-grow-1">
         <div className="position-relative">
-     <img
-  src={images.length > 0 ? images[0] : '/coming-soon.png'}
-  className="card-img-top vehicle-img coming-soon"
-  alt="Coming Soon"
-/>
-
+          <img
+            src={images.length > 0 ? images[0] : '/coming-soon.png'}
+            className="card-img-top vehicle-img coming-soon"
+            alt="Coming Soon"
+          />
 
           {/* Overlay title on image */}
           <div className="image-overlay-title px-2 py-1">
@@ -53,15 +53,30 @@ const VehicleCard = ({ car, index }) => {
         </div>
       </Link>
 
-      <div className="px-3 pb-3">
+      <div className="px-3 pb-3 d-flex flex-column gap-2">
         <Link
           to={`/book-test-drive?vehicle=${encodeURIComponent(`${car.description}${car.trim ? ` - ${car.trim}` : ''}`)}`}
           className="btn btn-sm btn-warning w-100"
         >
           Book Test Drive
         </Link>
+
+        {/* Carfax badge */}
+        {links && links.trim() !== '' && (
+          <a
+            href={links}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="d-flex justify-content-center"
+          >
+            <img
+              src="/carfax-logo.svg" // Make sure this image exists in your public/static folder!
+              alt="View Carfax"
+              style={{ width: '100px', height: 'auto' }}
+            />
+          </a>
+        )}
       </div>
-      
     </div>
   );
 };
