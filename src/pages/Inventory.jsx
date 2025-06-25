@@ -37,6 +37,14 @@ const Inventory = () => {
             const cleaned = data.filter(car => car.description && car['List price']);
             const parsed = cleaned.map((car, index) => {
               const [year, make, ...modelParts] = car.description.split(' ');
+              const vin = car.vin?.trim() || '';
+              const fallbackCarfaxUrl = vin.length >= 6
+                ? `https://berlinautosales.ca/carfax/${vin.slice(-6)}_carfax.pdf`
+                : '';
+              const validLink = car.links && car.links.includes('carfax.ca')
+                ? car.links
+                : fallbackCarfaxUrl;
+
               return {
                 ...car,
                 id: car['stock #'] || index + 1,
@@ -46,7 +54,8 @@ const Inventory = () => {
                 price: parseFloat(car['List price']?.replace(/[^0-9.]/g, '')) || 0,
                 mileage: parseFloat(car.odometer?.replace(/[^0-9]/g, '')) || 0,
                 images: car.images ? car.images.split(',').map(i => i.trim()).filter(i => i !== '') : [],
-                status: car.status?.trim().toLowerCase() || 'coming soon'
+                status: car.status?.trim().toLowerCase() || 'coming soon',
+                carfaxUrl: validLink
               };
             });
 

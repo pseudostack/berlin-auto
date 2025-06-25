@@ -12,7 +12,7 @@ const VehicleCard = ({ car, index }) => {
     odometer,
     'List price': price,
     images = [],
-    links // 👈 Carfax link from the backend CSV
+    carfaxUrl
   } = car;
 
   const parsedOdometer = Number((odometer || '0').replace(/,/g, '')).toLocaleString();
@@ -32,15 +32,12 @@ const VehicleCard = ({ car, index }) => {
             className="card-img-top vehicle-img coming-soon"
             alt="Coming Soon"
           />
-
-          {/* Overlay title on image */}
           <div className="image-overlay-title px-2 py-1">
             <div className="model-text">{description}</div>
             {trim && <div className="trim-text">{trim}</div>}
           </div>
         </div>
 
-        {/* Specs with background */}
         <div className="vehicle-specs-bg p-3 d-flex flex-column flex-grow-1">
           <p className="text-uppercase text-warning fw-bold mb-2" style={{ fontSize: '0.9rem' }}>
             Vehicle Specs:
@@ -61,18 +58,17 @@ const VehicleCard = ({ car, index }) => {
           Book Test Drive
         </Link>
 
-        {/* Carfax logo (only if Carfax PDF exists) */}
-        {links && links.trim() !== '' && (
+        {carfaxUrl && (
           <a
-            href={links}
+            href={carfaxUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="d-flex justify-content-center"
           >
             <img
-              src="/carfaxcanada-logomark.svg"
-              alt="View Carfax"
-              style={{ width: '50px', height: '50px' }}
+              src="/view-report-btn.svg"
+              alt="View Carfax Report"
+              style={{ width: '120px', height: 'auto' }}
             />
           </a>
         )}
