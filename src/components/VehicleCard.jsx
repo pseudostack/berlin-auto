@@ -72,6 +72,15 @@ const VehicleCard = ({ car, index }) => {
             />
           </a>
         )}
+
+        {!carfaxUrl && (
+          <Link
+            to={`/request-carfax?vin=${encodeURIComponent((car.vin || car.VIN || "").trim())}`}
+            className="btn btn-sm btn-outline-light w-100"
+          >
+            Request Carfax
+          </Link>
+        )}
       </div>
     </div>
   );
