@@ -27,9 +27,9 @@ const Inventory = () => {
   });
 
   useEffect(() => {
-    fetch('/inventory.csv')
-      .then(res => res.text())
-      .then(csv => {
+  fetch(`/inventory.csv?v=${Date.now()}`, { cache: "no-store" })
+    .then(res => res.text())
+    .then(csv => {
         Papa.parse(csv, {
           header: true,
           skipEmptyLines: true,
