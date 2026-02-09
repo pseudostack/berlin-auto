@@ -91,6 +91,9 @@ const Inventory = () => {
     });
   };
 
+const [showCarfaxModal, setShowCarfaxModal] = useState(false);
+const [selectedCar, setSelectedCar] = useState(null);
+
   const toggleMoreFilters = () => {
     setFilters(prev => ({ ...prev, showMore: !prev.showMore }));
   };
@@ -128,13 +131,19 @@ const Inventory = () => {
 
           {/* Filter UI omitted for brevity */}
 
-          <div className="row">
+          <div className="row g-4">
             {filteredCars.length === 0 ? (
               <p className="text-white">No vehicles match your filters.</p>
             ) : (
               filteredCars.map((car, i) => (
                 <div className="col-md-6 col-lg-4" key={i}>
-                  <VehicleCard car={car} index={i} />
+                  <VehicleCard
+                    car={car}
+                    onCarfaxRequest={(car) => {
+                      setSelectedCar(car);
+                      setShowCarfaxModal(true);
+                    }}
+                  />
                 </div>
               ))
             )}

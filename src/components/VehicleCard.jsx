@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './VehicleCard.css';
 
-const VehicleCard = ({ car, index }) => {
+const VehicleCard = ({ car, index, onCarfaxRequest }) => {
+
   const {
     description,
     trim,
@@ -74,12 +75,12 @@ const VehicleCard = ({ car, index }) => {
         )}
 
         {!carfaxUrl && (
-          <Link
-            to={`/request-carfax?vin=${encodeURIComponent((car.vin || car.VIN || "").trim())}`}
+          <button
             className="btn btn-sm btn-outline-light w-100"
+            onClick={() => onCarfaxRequest?.(car)}
           >
             Request Carfax
-          </Link>
+          </button>
         )}
       </div>
     </div>
